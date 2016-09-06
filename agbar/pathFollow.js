@@ -9,10 +9,10 @@ var color_particles = true;
 var show_labels = true;
 
 // Width of the flow lines
-var particle_displacement = 10;
+var particle_displacement = 5;
 
 // Particle density
-var FREQUENCY_INTERVAL = 4;
+var FREQUENCY_INTERVAL = 0.5;
 
 var SPEED_VALUE = 0.5;
 var SPEED_SLOW_FACTOR = 0.15;
@@ -106,7 +106,8 @@ var lineData = [
         data: {
             freq: 0.1,
             color: first_pass_clean_color,
-            displacement: 5
+            displacement: 5,
+            no_displace_x: true,
         },
         points: [
             {x:958, y:317}, 
@@ -128,7 +129,8 @@ var lineData = [
         data: {
             freq: 0.1,
             color: first_pass_clean_color,
-            displacement: 5
+            displacement: 5,
+            no_displace_x: true
         },
         points: [
             {x:895, y:281}, 
@@ -150,7 +152,8 @@ var lineData = [
           data: {
             freq: 0.1,
             color: first_pass_intermediate_clean_color,
-            displacement: 4
+            displacement: 4,
+            no_displace_x: true,
         },
         points: [
             {x:987, y:266}, 
@@ -282,7 +285,7 @@ var lineData = [
     {
         data: {
             freq: 1,
-            color: 'dirty_color',
+            color: dirty_color,
         },
         points: [
             { "x": 138, "y": 203 },
@@ -354,6 +357,7 @@ var lineData = [
             freq: 0.25,
             color: biosolids_color,
             displacement: 45,
+            no_displace_x: true,
         },
         points: [
             { "x": 760, "y": 430 },
@@ -393,6 +397,7 @@ for (var i = lineData.length - 1; i >= 0; i--) {
         .attr('color', current.data.color)
         .attr('freq', current.data.freq)
         .attr('displacement', current.data.displacement)
+        .attr('no_displace_x', current.data.no_displace_x)
         .classed('link', true)
         .attr("d", lineFunction(current.points))
         .attr("stroke", "blue")
@@ -468,6 +473,7 @@ function tick(elapsed, time) {
                 var frequency = d3.select(this).attr('freq');
 
                 var displacement = d3.select(this).attr('displacement');
+                var nodisplacement = d3.select(this).attr('no_displace_x');
                 var offset;
 
                 if (displacement) {
@@ -493,14 +499,15 @@ function tick(elapsed, time) {
                         path: this,
                         length: length,
                         animateTime: length,
-                        speed: speed
-
+                        speed: speed,
+                        no_displace_x: nodisplacement
                     };
 
                     item.color = d3.select(this).attr('color');
 
                     particles.push(item);
                 }
+                
             }
 
         });
@@ -529,8 +536,13 @@ function particleEdgeCanvasPath(elapsed) {
 
         context.fillStyle = particles[x].color;
 
+        var displace_x = particles[x].offset;
+
+        if (particles[x].no_displace_x) {
+            displace_x = 0;
+        }
         context.arc(
-            currentPos.x,
+            currentPos.x + displace_x,
             currentPos.y + particles[x].offset,
             1,
             0,
