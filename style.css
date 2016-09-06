@@ -1,0 +1,29 @@
+
+body {
+  background: #151516;
+}
+
+path {
+  fill: none;
+  stroke: none;
+  stroke-width: 1px;
+}
+
+canvas {
+    text-align: center;
+    z-index: 999;
+}
+
+svg {
+    display: none;
+    text-align: center;
+    position: absolute;
+    left:5px;
+    pointer-events: none;
+}
+
+#pos {
+    color: white;
+    font-family: 'Consolas';
+    font-size: 9px;
+}
