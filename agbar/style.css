@@ -1,7 +1,15 @@
 
 body {
-  background: #151516;
+  background-color: #FFF;
+  font-family: Helvetica;
+  color: gray;
 }
+
+h1 {
+    font-variant: small-caps;
+    color: #4F7D94;
+}
+    
 
 path {
   fill: none;
@@ -12,6 +20,9 @@ path {
 canvas {
     text-align: center;
     z-index: 999;
+    display: block;
+    margin: auto;
+    vertical-align: middle;
 }
 
 svg {

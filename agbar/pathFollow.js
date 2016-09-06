@@ -1,8 +1,6 @@
 // RED var stroke_particle = '#AD2C4E';
-var stroke_particle_ulcc = 'red';
-var stroke_particle_suezmax = 'blue';
 
-var stroke_particle = 'navy';
+var DEBUG = false;
 
 var color_particles = true;
 
@@ -26,7 +24,6 @@ var dimensions = {
     width: 1100 - margin.left - margin.right,
     height: 600 - margin.top - margin.bottom
 };
-
 
 var formatNumber = d3.format(",.0f"),
     format = function (d) {
@@ -62,11 +59,14 @@ var pure_clean_color = '#2FA6C7';
 var dirty_color = '#8B4513';
 var biosolids_color = 'brown';
 
+var CONSUMPTION_FACTOR = 20;
+
+
 var lineData = [
     // From Aeration tank
     {
         data: {
-            freq: 1,
+            freq: 1 * CONSUMPTION_FACTOR ,
             color: just_aireated_color,
         },
         points: [
@@ -80,7 +80,7 @@ var lineData = [
     // From Settling tank
     {
         data: {
-            freq: 1,
+            freq: 1 * CONSUMPTION_FACTOR ,
             color: almost_not_treated_color,
         },
         points: [
@@ -93,7 +93,7 @@ var lineData = [
     // From solids thickening/clarifiers to ultraviolet
     {
         data: {
-            freq: 0.25,
+            freq: 0.25 * CONSUMPTION_FACTOR ,
             color: first_pass_clean_color,
         },
         points: [
@@ -104,7 +104,7 @@ var lineData = [
     // Loop within solids thickening
     {
         data: {
-            freq: 0.1,
+            freq: 0.1 * CONSUMPTION_FACTOR ,
             color: first_pass_clean_color,
             displacement: 5,
             no_displace_x: true,
@@ -127,7 +127,7 @@ var lineData = [
     ]},
       {
         data: {
-            freq: 0.1,
+            freq: 0.1 * CONSUMPTION_FACTOR ,
             color: first_pass_clean_color,
             displacement: 5,
             no_displace_x: true
@@ -150,7 +150,7 @@ var lineData = [
     ]},
     {
           data: {
-            freq: 0.1,
+            freq: 0.1 * CONSUMPTION_FACTOR ,
             color: first_pass_intermediate_clean_color,
             displacement: 4,
             no_displace_x: true,
@@ -170,7 +170,7 @@ var lineData = [
     // From ultraviolet to filtration
     {
         data: {
-            freq: 0.25,
+            freq: 0.25 * CONSUMPTION_FACTOR ,
             color: half_clean_color,
         },
         points: [
@@ -185,7 +185,7 @@ var lineData = [
     //
     {
         data: {
-            freq: 0.1,
+            freq: 0.1 * CONSUMPTION_FACTOR ,
             color: pure_clean_color,
         },
         points: [
@@ -198,7 +198,7 @@ var lineData = [
 
     {
         data: {
-            freq: 0.4,
+            freq: 0.4 * CONSUMPTION_FACTOR ,
             color: pure_clean_color,
         },
         points: [
@@ -219,7 +219,7 @@ var lineData = [
     //
     {
         data: {
-            freq: 1,
+            freq: 1 * CONSUMPTION_FACTOR ,
             color: dirty_color,
         },
         points: [
@@ -229,7 +229,7 @@ var lineData = [
     },
      {
         data: {
-            freq: 1,
+            freq: 1 * CONSUMPTION_FACTOR ,
             color: dirty_color,
 
         },
@@ -240,7 +240,7 @@ var lineData = [
     },
      {
         data: {
-            freq: 1,
+            freq: 1 * CONSUMPTION_FACTOR ,
             color: dirty_color,
 
         },
@@ -251,7 +251,7 @@ var lineData = [
     },
     {
         data: {
-            freq: 1,
+            freq: 1 * CONSUMPTION_FACTOR ,
             color: dirty_color,
         },
         points: [
@@ -262,7 +262,7 @@ var lineData = [
     },
     {
         data: {
-            freq: 1,
+            freq: 1 * CONSUMPTION_FACTOR ,
             color: dirty_color,
         },
         points: [
@@ -273,7 +273,7 @@ var lineData = [
     },
     {
         data: {
-            freq: 1,
+            freq: 1 * CONSUMPTION_FACTOR ,
             color: dirty_color,
         },
         points: [
@@ -284,7 +284,7 @@ var lineData = [
     },
     {
         data: {
-            freq: 1,
+            freq: 1 * CONSUMPTION_FACTOR ,
             color: dirty_color,
         },
         points: [
@@ -298,7 +298,7 @@ var lineData = [
     // From Bar Screening
     {
         data: {
-            freq: 0.5,
+            freq: 0.5 * CONSUMPTION_FACTOR ,
             color: dirty_color,
         },
         points: [
@@ -311,7 +311,7 @@ var lineData = [
     // From solids thikening
     {
         data: {
-            freq: 0.05,
+            freq: 0.05 * CONSUMPTION_FACTOR ,
             color: dirty_color,
         },
         points: [
@@ -326,7 +326,7 @@ var lineData = [
    
     {
         data: {
-            freq: 0.25,
+            freq: 0.25 * CONSUMPTION_FACTOR ,
             color: dirty_color,
         },
         points: [
@@ -336,7 +336,7 @@ var lineData = [
     },
     {
         data: {
-            freq: 0.25,
+            freq: 0.25 * CONSUMPTION_FACTOR ,
             color: dirty_color,
         },
         points: [
@@ -354,7 +354,7 @@ var lineData = [
     // Digestion process
     {
         data: {
-            freq: 0.25,
+            freq: 0.25 * CONSUMPTION_FACTOR ,
             color: biosolids_color,
             displacement: 45,
             no_displace_x: true,
@@ -375,8 +375,7 @@ var lineData = [
 
     {
         data: {
-            dest: '',
-            freq: 0.1,
+            freq: 0.1 * CONSUMPTION_FACTOR ,
             color: biosolids_color,
         },
         points: [
@@ -446,17 +445,17 @@ imageObj.onload = function () {
 
 imageObj.src = 'flow.png';
 
-canvas.addEventListener('mousemove', function (evt) {
-    var mousePos = getMousePos(canvas, evt);
-    d3.select('#pos').html('Pos: ' + mousePos.x + ',' + mousePos.y);
-}, false);
+if (DEBUG) {
+    canvas.addEventListener('mousemove', function (evt) {
+        var mousePos = getMousePos(canvas, evt);
+        d3.select('#pos').html('Pos: ' + mousePos.x + ',' + mousePos.y);
+    }, false);
 
-canvas.addEventListener('click', function (evt) {
-    var mousePos = getMousePos(canvas, evt);
-    console.log('{x:' + mousePos.x + ', y:' + mousePos.y + '}, ');
-}, false);
-
-///////
+    canvas.addEventListener('click', function (evt) {
+        var mousePos = getMousePos(canvas, evt);
+        console.log('{x:' + mousePos.x + ', y:' + mousePos.y + '}, ');
+    }, false);
+}
 
 function tick(elapsed, time) {
 
